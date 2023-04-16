@@ -40,8 +40,10 @@ def remove_piece(squares, board):
 def solve(pieces, board, solutions):
    # no pieces left means we have placed all of them on the board
    # and found a solution
-   if (len(pieces) == 0): 
-      solutions.append(board.copy())
+   if (len(pieces) == 0):
+      if (board.count(0) == 0):
+         solutions.append(board.copy())
+         pretty_print(board)
       return
 
    #pieces are numbered from 1 to 8
@@ -51,9 +53,20 @@ def solve(pieces, board, solutions):
       place_piece(piece_number,placement,board)
       solve(pieces, board, solutions)
       remove_piece(placement,board)
+   pieces.append(piece)
 
 def pretty_print(board):
-   print(board)
+   b = board
+   s = ' '
+   print(b[0], b[1],b[2], b[3], b[4], b[5], sep=s)
+   print(b[6], b[7],b[8], b[9], b[10],b[11], sep=s)
+   print(b[12], b[13],b[14], b[15], b[16],b[17],b[18], sep=s)
+   print(b[19], b[20],b[21], b[22], b[23],b[24],b[25], sep=s)
+   print(b[26], b[27],b[28], b[29], b[30],b[31],b[32], sep=s)
+   print(b[33], b[34],b[35], b[36], b[37],b[38],b[39], sep=s)
+   print(b[40], b[41], b[42], sep=s)
+
+
 
 if __name__ == "__main__":
    if len(sys.argv) == 3:
@@ -66,8 +79,9 @@ if __name__ == "__main__":
    print(month, day)
 
    p = puzzle(month,day)
+   pretty_print(p)
    solutions = []
    solve(all_pieces(),p,solutions)
    for solution in solutions:
-      print("\nSolution")
+      print("Solution")
       pretty_print(solution)
