@@ -65,6 +65,7 @@ def pretty_print(board):
    print(b[26], b[27],b[28], b[29], b[30],b[31],b[32], sep=s)
    print(b[33], b[34],b[35], b[36], b[37],b[38],b[39], sep=s)
    print(b[40], b[41], b[42], sep=s)
+   print()
 
 
 
@@ -76,12 +77,8 @@ if __name__ == "__main__":
       now = datetime.now()
       month = now.month
       day = now.day
-   print(month, day)
 
    p = puzzle(month,day)
-   pretty_print(p)
    solutions = []
    solve(all_pieces(),p,solutions)
-   for solution in solutions:
-      print("Solution")
-      pretty_print(solution)
+   print("number of solutions:", len(solutions))
