@@ -1,6 +1,10 @@
 from all_pieces import all_pieces
 from datetime import datetime
 import sys
+from PIL import Image, ImageDraw, ImageColor
+
+
+
 
 # the board is represented as a one-dimensional array of size 43
 # An empty board is all zeros
@@ -40,6 +44,34 @@ def remove_piece(squares, board):
    for square in squares:
       board[square] = 0
 
+def rowcol(idx):
+   if (idx < 12):
+      return (idx // 6, idx % 6)
+   elif idx < 40:
+      idx = idx - 12
+      return (idx // 7 + 2, idx % 7)
+   else:
+      return (6, idx % 40)
+
+colors = ['yellow', 'turquoise', 'orange', 'darkgreen','green','red', 'purple','navy']
+#colors = ['turquoise','yellow', 'blue', 'orange', 'darkgreen', 'lightgreen', 'red', 'purple']
+def create_image(board, month, day, nr):
+   img = Image.new("RGB", (560, 560))
+   img1 = ImageDraw.Draw(img)
+   (w,h) = (560,560)
+   for idx in range(43):
+      if board[idx] == 'X':
+         continue
+      (col,row) = rowcol(idx)
+      left_margin = 35 if col == 0 else 0
+      top_margin = 35 if row == 0 else 0
+      shape = [(row * 70 + 35, col*70 + 35), (row*70+105,col*70+105)]
+      color =ImageColor.getrgb(colors[7-board[idx]])
+      img1.rectangle(shape, fill = color, outline=None)
+   path = str(month) + "." + str(day) + '.' + str(nr) + ".png"
+   img.save(path,'png')
+   return path
+
 # Depth first exhaustive search using recursion
 def solve(pieces, board, solutions):
 
@@ -73,6 +105,18 @@ def pretty_print(board):
 
 if __name__ == "__main__":
 
+   solution = [
+      3, 8, 8, 8, 2, 'X',
+      3, 8, 8, 8, 2, 7,
+      3, 3, 3, 2, 2, 7, 7,
+      5, 5, 'X', 2, 1, 7,7,
+      5, 6, 6, 4, 1, 1, 1,
+      5, 6, 4, 4, 4, 4, 1,
+      5, 6, 6
+   ]
+   create_image(solution, 6,10,1)
+   exit()
+
    # get the month and day from the command line
    # or use todays date when not specified
    if len(sys.argv) == 3:
@@ -87,4 +131,15 @@ if __name__ == "__main__":
    solutions = []
    pieces = all_pieces()
    solve(pieces, p, solutions)
+   idx = 0
+   fname = f'{month}.{day}.html'
+   fd = open(fname, 'w')
+   fd.write(f"<html><body><h1>dragon puzzle solutions {day}/{month}</h1>\n")
+   for solution in solutions:
+      idx = idx + 1
+      name = create_image(solution, month, day, idx)
+      fd.write(f'<img style="margin:30px" src="{name}"/>\n')
+
+   fd.flush()
+   fd.close()
    print("number of solutions:", len(solutions))
